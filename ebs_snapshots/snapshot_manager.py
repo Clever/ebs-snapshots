@@ -30,9 +30,18 @@ def run(connection, volume_id, interval='daily', max_snapshots=0, name=''):
         print kayvee.formatLog("ebs-snapshots", "error", "failed to connect to AWS", {"msg": error.message})
         return
 
-    for volume in volumes:
+    detached_volumes = filter(_is_volume_detached, volumes)
+
+    for volume in detached_volumes:
         _ensure_snapshot(connection, volume, interval, name)
         _remove_old_snapshots(connection, volume, max_snapshots)
+
+
+def _is_volume_detached(volume):
+    if volume.attach_data:
+        if volume.attach_data.status == 'attached':
+            return False
+    return True
 
 
 def _create_snapshot(connection, volume, name=''):
