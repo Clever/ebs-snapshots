@@ -19,6 +19,7 @@ jobs:
     - run: sudo apt-get update
     - run: sudo apt-get install python-dev
     - run: sudo python -m pip install --upgrade pip==9.0.3
+    - run: make deps
     - run: make test
     - run:
         command: |-
