@@ -110,19 +110,12 @@ def _copy_snapshot(backup_client, volume, snapshot_id, name):
             Description='copy of {}'.format(snapshot_id))
 
     except ClientError as error:
-        if error.response["Error"]["Code"] == "ResourceLimitExceeded":
-            logging.info(kayvee.formatLog("ebs-snapshots", "info", "copying snapshot", {
-                "volume": volume.id,
-                "source_snapshot": snapshot_id,
-                "name": name
-            }))
-        else:
-            logging.error(kayvee.formatLog("ebs-snapshots", "error", "snapshot copy error", {
-                "name": name,
-                "volume": volume.id,
-                "source_snapshot": snapshot_id,
-                "error": error.response["Error"]["Code"]
-            }))
+        logging.error(kayvee.formatLog("ebs-snapshots", "error", "snapshot copy error", {
+            "name": name,
+            "volume": volume.id,
+            "source_snapshot": snapshot_id,
+            "error": error.response["Error"]["Code"]
+        }))
         return None
 
     try:
